@@ -7,6 +7,7 @@
             [clojure.spec.gen.alpha :as gen]))
 
 
+;; starttime should be before endtime
 (defn start-before-end [m]
   (let [{start :starttime end :endtime} m]
     (jt/before?  start end)))
@@ -17,7 +18,9 @@
 (s/def ::weekdays (s/coll-of ::weekday :distinct true))
 (s/def ::starttime :common.spec-time/time)
 (s/def ::endtime :common.spec-time/time)
-(s/def ::period (s/keys :req-un [::weekdays ::starttime ::endtime]))
+(s/def ::period (s/and
+                  (s/keys :req-un [::weekdays ::starttime ::endtime])
+                  start-before-end))
 
 
 ;; Address of the parkingspot
